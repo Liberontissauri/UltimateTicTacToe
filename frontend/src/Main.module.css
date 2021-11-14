@@ -1,0 +1,68 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    padding: 10vh;
+    background-color: #313131;
+}
+.title {
+    font-family: Nunito;
+    font-weight: 700;
+    font-size: 48px;
+    
+    color: #9A363C;
+}
+.inputLabel {
+    font-family: Nunito;
+    font-weight: 400;
+    font-size: 24px;
+    text-align: center;
+
+    margin: 20px 22px;
+
+    color: #C4C4C4;
+}
+.joinBtn {
+    font-family: Nunito;
+    font-style: 700;
+    font-weight: bold;
+    font-size: 28px;
+    color: #C4C4C4;
+
+    width: 300px;
+    height: 70px;
+
+    margin-top: 40px;
+
+    border: 6px solid #4543A5;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0);
+    transition: background-color 0.2s ease;
+}
+.joinBtn:hover {
+    cursor: pointer;
+    background-color: #4543A5;
+}
+.createBtn {
+    font-family: Nunito;
+    font-style: 700;
+    font-weight: bold;
+    font-size: 28px;
+    color: #C4C4C4;
+
+    width: 300px;
+    height: 70px;
+
+    margin: 30px;
+
+    border: 6px solid #A59543;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0);
+    transition: background-color 0.2s ease;
+}
+.createBtn:hover {
+    cursor: pointer;
+    background-color: #A59543;
+}

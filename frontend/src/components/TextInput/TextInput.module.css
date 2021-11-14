@@ -1,0 +1,13 @@
+.input {
+    font-family: Nunito;
+    font-weight: 400;
+    font-size: 26px;
+    text-align: center;
+
+    padding: 8px 45px;
+
+    color: #C4C4C4;
+    background-color: rgba(0, 0, 0, 0);
+    border: 5px solid #C4C4C4;
+    border-radius: 15px;
+}

@@ -20,23 +20,29 @@ class Room {
     }
     getCurrentPlayer() {
         if(this.connected_players.length == 0) return "none"
-        let turn = this.turn;
-        while (turn > 0) {
-            turn -= this.connected_players.length
+        let count = 0;
+        let player_index = 0;
+        while (count < this.turn) {
+            count += 1;
+            player_index += 1;
+            if(player_index >= this.connected_players.length) {
+                player_index = 0;
+            }
         }
-        return this.connected_players[turn * -1].piece
+        return this.connected_players[player_index]
     }
     getNextPlayer() {
         if(this.connected_players.length == 0) return "none"
-        let turn = this.turn;
-        while (turn > 0) {
-            turn -= this.connected_players.length
+        let count = -1;
+        let player_index = 0;
+        while (count < this.turn) {
+            count += 1;
+            player_index += 1;
+            if(player_index >= this.connected_players.length) {
+                player_index = 0;
+            }
         }
-        turn = turn * -1
-        turn += 1
-        if(turn > this.connected_players.length - 1) turn = 0;
-        
-        return this.connected_players[turn].piece
+        return this.connected_players[player_index]
     }
     generateId() {
         let id = "";
@@ -60,6 +66,10 @@ class Room {
     }
     getPlayerBySocketId(socket_id) {
         let player = this.connected_players.find(element => element.socket.id == socket_id)
+        return player
+    }
+    getPlayerByPiece(piece) {
+        let player = this.connected_players.find(element => element.piece == piece)
         return player
     }
     getAvailablePieces() {
@@ -97,14 +107,17 @@ class Room {
         this.io.to(this.id).emit("game_update", {
             
             board: this.board,
-            current_player: this.getCurrentPlayer(),
-            next_player: this.getNextPlayer()
+            current_player: this.getCurrentPlayer().piece,
+            next_player: this.getNextPlayer().piece
         })
     }
     makeMove(socket, x, y) {
         const player = this.getPlayerBySocketId(socket.id);
-        if(this.board[y][x].piece != "none") socket.emit("alert-error", "You can't play in occupied squares");
+        const turn_player = this.getCurrentPlayer()
+        if(this.board[y][x].piece != "none") return socket.emit("alert-error", "You can't play in occupied squares");
+        if(turn_player.socket.id != player.socket.id) return socket.emit("alert-error", "It's Not your turn")
         this.board[y][x].piece = player.piece;
+        this.turn += 1;
     }
 }
 

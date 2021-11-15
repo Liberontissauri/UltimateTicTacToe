@@ -7,9 +7,6 @@ import { useParams } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
 import { Confirm, Report } from 'notiflix';
 
-function clickSquare(location) {
-  console.log("click action at " + location.x + ";" + location.y)
-}
 function clickGiveUp() {
   console.log("give up clicked")
 }
@@ -72,6 +69,9 @@ function Game(props) {
   }
   function playAgain() {
 
+  }
+  function clickSquare(location) {
+    props.socket.emit("move", {location: location, room_id: gameId})
   }
 
   return (

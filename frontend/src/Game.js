@@ -3,15 +3,12 @@ import { useState } from "react"
 import Board from "./components/board"
 import TopBarDisplay from './components/topBarDisplay';
 import NextPlayerDisplay from './components/NextPlayerDisplay';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
 import { Confirm, Report } from 'notiflix';
 
-function clickGiveUp() {
-  console.log("give up clicked")
-}
-
 function Game(props) {
+  const navigate = useNavigate()
   const [current_player, setCurrentPlayer] = useState("cross");
   const [next_player, setNextPlayer] = useState("circle")
   const [board_content, setBoardContent] = useState([[{piece: "none"},{piece: "cross"},{piece: "none"},{piece: "none"}],
@@ -40,10 +37,18 @@ function Game(props) {
       setNextPlayer(next_player)
       setCurrentPlayer(current_player)
     })
-    props.socket.on("win", () => {
-      Confirm.show(
+    props.socket.on("game_end", enddata => {
+      const winner_id = enddata.winner_id;
+      const winner_piece = enddata.winner_piece;
+      if(winner_id == props.socket.id) return Confirm.show(
         "You Won",
         "Do you want to play again?",
+        "Play again", "Leave Room",
+        playAgain, leaveRoom
+      )
+      Confirm.show(
+        "You Lost...",
+        `${winner_piece} won... Do you want to play again?`,
         "Play again", "Leave Room",
         playAgain, leaveRoom
       )
@@ -53,7 +58,7 @@ function Game(props) {
         "Wrong Password",
         "Input a password:",
         password => joinRoom(gameId, password),
-        () => leaveRoom(gameId)
+        leaveRoom
       )
     })
     props.socket.on("alert-error", data => {
@@ -64,14 +69,19 @@ function Game(props) {
   function joinRoom(id, password) {
     props.socket.emit("join_room", {id: id, password: password})
   }
-  function leaveRoom(id) {
-
+  function leaveRoom() {
+    props.socket.emit("leave_room", gameId)
+    navigate("/")
+    
   }
   function playAgain() {
 
   }
   function clickSquare(location) {
     props.socket.emit("move", {location: location, room_id: gameId})
+  }
+  function clickGiveUp() {
+    leaveRoom(gameId)
   }
 
   return (

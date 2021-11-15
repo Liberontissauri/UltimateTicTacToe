@@ -28,6 +28,9 @@ class Room_Manager {
                 this.createRoom(socket, name, password, board_size, player_limit);
                 this.io.emit("room_list", this.getPublicRoomList())
             })
+            socket.on("leave_room", room_id => {
+                this.leaveRoom(socket, room_id)
+            })
             socket.on("join_room", data => {
                 const room_id = data.id;
                 const password = data.password;
@@ -40,7 +43,19 @@ class Room_Manager {
 
                 socket.emit("room_id", room.id)
             })
+            socket.on("disconnect", data => {
+                if(!this.findRoomBySocketId(socket.id)) return
+                this.leaveRoom(socket, this.findRoomBySocketId(socket.id).id)
+            })
         })
+    }
+    findRoomBySocketId(socket_id) {
+        let final_room;
+        this.room_list.forEach(room => {
+            const player = room.connected_players.find(player => player.socket.id == socket_id)
+            if(player != undefined) final_room = room;
+        });
+        return final_room;
     }
     createRoom(socket, name, password, board_size, player_limit) {
         if(name == "") return socket.emit("app-error", "Your room needs to have a name");
@@ -54,6 +69,11 @@ class Room_Manager {
         const room = this.room_list.find(room => room.id == room_id)
         if(!room) return socket.emit("alert-error", "The room does not exist")
         room.addPlayer(socket, password)
+    }
+    leaveRoom(socket, room_id) {
+        const room = this.room_list.find(room => room.id == room_id)
+        if(!room) return socket.emit("alert-error", "The room does not exist")
+        room.removePlayer(socket.id)
     }
     getPublicRoomList() {
         return this.room_list.map(room => {

@@ -93,7 +93,7 @@ class Room {
         this.connected_players.push({socket: socket, piece: piece})
     }
     removePlayer(socket_id) {
-        let player_index = this.connected_players.find(player => player.socket.id == socket_id)
+        let player_index = this.connected_players.findIndex(player => player.socket.id == socket_id)
         this.connected_players[player_index].socket.leave(this.id)
         this.connected_players.splice(player_index, 1)
     }
@@ -118,8 +118,12 @@ class Room {
         if(this.board[y][x].piece != "none") return socket.emit("alert-error", "You can't play in occupied squares");
         if(turn_player.socket.id != player.socket.id) return socket.emit("alert-error", "It's Not your turn")
         this.board[y][x].piece = player.piece;
+        
+        if(this.checkWin(x, y)) this.io.to(this.id).emit("game_end", {
+            winner_id: turn_player.socket.id,
+            winner_piece: this.getCurrentPlayer().piece
+        })
         this.turn += 1;
-        this.checkWin(x, y)
     }
     checkWin(x, y) {
         if(win_module.checkHorizontalWin(this.board, 3, x, y)) return true

@@ -81,7 +81,7 @@ function checkDiagonalRightWin(board, win_streak, x, y) {
         }
     }
     while(true) {
-        if(pointer_y >= board_length || pointer_x >= board_length) {
+        if(pointer_y < 0 || pointer_x >= board_length) {
             break
         }
         if(board[pointer_y][pointer_x].piece != player_piece) break;

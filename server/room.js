@@ -1,3 +1,5 @@
+const win_module = require("./win_controller")
+
 class Room {
     constructor(io, name, password, board_size, player_limit) {
         this.io = io;
@@ -87,7 +89,6 @@ class Room {
         let available_pieces = this.getAvailablePieces();
         let piece = available_pieces[Math.floor(Math.random() * (Math.abs(available_pieces.length)))]
         
-        console.log("Adding...")
         socket.join(this.id)
         this.connected_players.push({socket: socket, piece: piece})
     }
@@ -118,6 +119,13 @@ class Room {
         if(turn_player.socket.id != player.socket.id) return socket.emit("alert-error", "It's Not your turn")
         this.board[y][x].piece = player.piece;
         this.turn += 1;
+        this.checkWin(x, y)
+    }
+    checkWin(x, y) {
+        if(win_module.checkHorizontalWin(this.board, 3, x, y)) return true
+        if(win_module.checkVerticalWin(this.board, 3, x, y)) return true
+        if(win_module.checkDiagonalRightWin(this.board, 3, x, y)) return true
+        if(win_module.checkDiagonalLeftWin(this.board, 3, x, y)) return true
     }
 }
 

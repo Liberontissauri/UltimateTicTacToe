@@ -35,8 +35,6 @@ class Room {
         turn = turn * -1
         turn += 1
         if(turn > this.connected_players.length - 1) turn = 0;
-
-        console.log(this.connected_players[turn].piece)
         
         return this.connected_players[turn].piece
     }
@@ -61,8 +59,8 @@ class Room {
         return board
     }
     getPlayerBySocketId(socket_id) {
-        let index = this.connected_players.find(element => element.socket.id == socket_id)
-        return this.connected_players[index]
+        let player = this.connected_players.find(element => element.socket.id == socket_id)
+        return player
     }
     getAvailablePieces() {
         let available_pieces = this.possible_pieces.slice();
@@ -102,6 +100,11 @@ class Room {
             current_player: this.getCurrentPlayer(),
             next_player: this.getNextPlayer()
         })
+    }
+    makeMove(socket, x, y) {
+        const player = this.getPlayerBySocketId(socket.id);
+        if(this.board[y][x].piece != "none") socket.emit("alert-error", "You can't play in occupied squares");
+        this.board[y][x].piece = player.piece;
     }
 }
 

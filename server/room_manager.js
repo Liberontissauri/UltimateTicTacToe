@@ -12,6 +12,13 @@ class Room_Manager {
         }, 1000)
         this.io.on("connection", socket => {
             socket.emit("room_list", this.getPublicRoomList())
+            socket.on("move", data => {
+                const x = data.location.x;
+                const y = data.location.y;
+                const room_id = data.room_id;
+                const room = this.room_list.find(room => room.id == room_id);
+                room.makeMove(socket, x, y)
+            })
             socket.on("create_room", data => {
                 const name = data.name;
                 const password = data.password;

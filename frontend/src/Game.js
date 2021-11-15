@@ -31,8 +31,10 @@ function Game(props) {
 
   if(!sockets_setted_up) {
     joinRoom(gameId, password)
-
+    
+    setSocketsSettedUp(true)
     props.socket.on("game_update", gamedata => {
+      console.log(gamedata)
       const board = gamedata.board;
       const next_player = gamedata.next_player;
       const current_player = gamedata.current_player;

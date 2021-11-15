@@ -8,8 +8,10 @@ function TopBarDisplay(props) {
                 return "/icons/circle.svg";
             case "cross":
                 return "/icons/cross.svg";
-            case "none":
-                return "";
+            case "triangle":
+                return "/icons/triangle.svg";
+            case "square":
+                return "/icons/square.svg";
             default:
                 return "";
         }

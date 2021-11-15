@@ -5,8 +5,10 @@
 }
 @media (min-resolution: 0.8dppx) {
     .board {
-        width: 500px;
-        height: 500px;
+        position: relative;
+        top: 50px;
+        width: 400px;
+        height: 400px;
     }
   }
 .square {

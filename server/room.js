@@ -22,10 +22,23 @@ class Room {
         if(this.connected_players.length == 0) return "none"
         let turn = this.turn;
         while (turn > 0) {
-            turn - this.connected_players.length
+            turn -= this.connected_players.length
         }
-        console.log(turn)
         return this.connected_players[turn * -1].piece
+    }
+    getNextPlayer() {
+        if(this.connected_players.length == 0) return "none"
+        let turn = this.turn;
+        while (turn > 0) {
+            turn -= this.connected_players.length
+        }
+        turn = turn * -1
+        turn += 1
+        if(turn > this.connected_players.length - 1) turn = 0;
+
+        console.log(this.connected_players[turn].piece)
+        
+        return this.connected_players[turn].piece
     }
     generateId() {
         let id = "";
@@ -64,7 +77,9 @@ class Room {
         if(this.connected_players.length >= this.player_limit) return socket.emit("error", "The room is full")
         if(password != password) return socket.emit("wrong_password")
         let available_pieces = this.getAvailablePieces();
-        let piece = available_pieces[Math.floor(Math.random() * (available_pieces.length))]
+        let piece = available_pieces[Math.floor(Math.random() * (Math.abs(available_pieces.length)))]
+        
+        console.log("Adding...")
         socket.join(this.id)
         this.connected_players.push({socket: socket, piece: piece})
     }
@@ -81,12 +96,11 @@ class Room {
         return true
     }
     updateClients() {
-        console.log("updatee")
         this.io.to(this.id).emit("game_update", {
             
             board: this.board,
             current_player: this.getCurrentPlayer(),
-            next_player: "none"
+            next_player: this.getNextPlayer()
         })
     }
 }

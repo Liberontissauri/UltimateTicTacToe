@@ -72,10 +72,9 @@ function Game(props) {
   function leaveRoom() {
     props.socket.emit("leave_room", gameId)
     navigate("/")
-    
   }
   function playAgain() {
-
+    props.socket.emit("reset_game", gameId)
   }
   function clickSquare(location) {
     props.socket.emit("move", {location: location, room_id: gameId})

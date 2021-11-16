@@ -6,6 +6,7 @@ class Room {
         this.name = name;
         this.id = this.generateId();
         this.password = password;
+        this.size = board_size;
         this.board = this.generate_board(board_size);
         this.player_limit = player_limit;
         this.connected_players = [];
@@ -130,6 +131,10 @@ class Room {
         if(win_module.checkVerticalWin(this.board, 3, x, y)) return true
         if(win_module.checkDiagonalRightWin(this.board, 3, x, y)) return true
         if(win_module.checkDiagonalLeftWin(this.board, 3, x, y)) return true
+    }
+    resetGame() {
+        this.board = this.generate_board(this.size);
+        this.turn = 0;
     }
 }
 

@@ -47,6 +47,10 @@ class Room_Manager {
                 if(!this.findRoomBySocketId(socket.id)) return
                 this.leaveRoom(socket, this.findRoomBySocketId(socket.id).id)
             })
+            socket.on("reset_game", room_id => {
+                const room = this.room_list.find(room => room.id == room_id);
+                room.resetGame();
+            })
         })
     }
     findRoomBySocketId(socket_id) {
@@ -74,6 +78,7 @@ class Room_Manager {
         const room = this.room_list.find(room => room.id == room_id)
         if(!room) return socket.emit("alert-error", "The room does not exist")
         room.removePlayer(socket.id)
+        if(room.connected_players.length == 0) this.room_list.splice(this.room_list.indexOf(room), 1)
     }
     getPublicRoomList() {
         return this.room_list.map(room => {

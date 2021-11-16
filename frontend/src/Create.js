@@ -14,13 +14,14 @@ function Game(props) {
     const [password, setPassword] = useState("");
     const [board_size, setBoardSize] = useState("");
     const [player_limit, setPlayerLimit] = useState("")
+    const [piece_streak, setPieceStreak] = useState("")
     const navigate = useNavigate()
 
     //If this is not done socket io will keep creating connection each time there is a change in the state
     const [sockets_setted_up, setSocketsSettedUp] = useState(false)
 
-    function createRoom(name, password, board_size, player_limit) {
-      props.socket.emit("create_room", {name, password, board_size, player_limit})
+    function createRoom(name, password, board_size, player_limit, piece_streak) {
+      props.socket.emit("create_room", {name, password, board_size, player_limit, piece_streak})
     }
 
     if(!sockets_setted_up) {
@@ -48,9 +49,11 @@ function Game(props) {
             <TextInput onChange={(e) => {setPassword(e.target.value)}} placeholder={"No Password"}></TextInput>
             <h2 className={styles.inputLabel}>Board Size</h2>
             <TextInput onChange={(e) => {setBoardSize(e.target.value)}}></TextInput>
+            <h2 className={styles.inputLabel}>How many pieces in a row to win</h2>
+            <TextInput onChange={(e) => {setPieceStreak(e.target.value)}}></TextInput>
             <h2 className={styles.inputLabel}>Player Limit</h2>
             <TextInput onChange={(e) => {setPlayerLimit(e.target.value)}}></TextInput>
-          <button className={styles.createBtn} onClick={() => {createRoom(name, password, board_size, player_limit)}}>Create Room</button>
+          <button className={styles.createBtn} onClick={() => {createRoom(name, password, board_size, player_limit, piece_streak)}}>Create Room</button>
         </div>
         
       );

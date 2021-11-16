@@ -1,13 +1,14 @@
 const win_module = require("./win_controller")
 
 class Room {
-    constructor(io, name, password, board_size, player_limit) {
+    constructor(io, name, password, board_size, player_limit, piece_streak) {
         this.io = io;
         this.name = name;
         this.id = this.generateId();
         this.password = password;
         this.size = board_size;
         this.board = this.generate_board(board_size);
+        this.piece_streak = piece_streak;
         this.player_limit = player_limit;
         this.connected_players = [];
         this.possible_pieces = [
@@ -127,10 +128,10 @@ class Room {
         this.turn += 1;
     }
     checkWin(x, y) {
-        if(win_module.checkHorizontalWin(this.board, 3, x, y)) return true
-        if(win_module.checkVerticalWin(this.board, 3, x, y)) return true
-        if(win_module.checkDiagonalRightWin(this.board, 3, x, y)) return true
-        if(win_module.checkDiagonalLeftWin(this.board, 3, x, y)) return true
+        if(win_module.checkHorizontalWin(this.board, this.piece_streak, x, y)) return true
+        if(win_module.checkVerticalWin(this.board, this.piece_streak, x, y)) return true
+        if(win_module.checkDiagonalRightWin(this.board, this.piece_streak, x, y)) return true
+        if(win_module.checkDiagonalLeftWin(this.board, this.piece_streak, x, y)) return true
     }
     resetGame() {
         this.board = this.generate_board(this.size);

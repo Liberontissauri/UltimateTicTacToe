@@ -26,8 +26,9 @@ class Room_Manager {
                 const password = data.password;
                 const board_size = data.board_size;
                 const player_limit = data.player_limit;
+                const piece_streak = data.piece_streak
 
-                this.createRoom(socket, name, password, board_size, player_limit);
+                this.createRoom(socket, name, password, board_size, player_limit, piece_streak);
                 this.io.emit("room_list", this.getPublicRoomList())
             })
             socket.on("leave_room", room_id => {
@@ -52,6 +53,7 @@ class Room_Manager {
             })
             socket.on("reset_game", room_id => {
                 const room = this.room_list.find(room => room.id == room_id);
+                if(!room) return
                 room.resetGame();
             })
         })
@@ -64,12 +66,13 @@ class Room_Manager {
         });
         return final_room;
     }
-    createRoom(socket, name, password, board_size, player_limit) {
+    createRoom(socket, name, password, board_size, player_limit, piece_streak) {
         if(name == "") return socket.emit("app-error", "Your room needs to have a name");
         if(board_size < 3 || board_size > 8) return socket.emit("app-error", "The board size should be between 3x3 and 8x8")
         if(player_limit < 2 || player_limit > 4) return socket.emit("app-error", "The player limit should be between 2 and 4")
+        if(piece_streak < 2 || piece_streak > board_size) return socket.emit("app-error", "The pieces in a row to win should be in between 2 and the board size.")
 
-        this.room_list.push(new Room(this.io, name, password, board_size, player_limit))
+        this.room_list.push(new Room(this.io, name, password, board_size, player_limit, piece_streak))
         socket.emit("app-success", "The Room Was Created Successfully!")
     }
     joinRoom(socket, room_id, password) {

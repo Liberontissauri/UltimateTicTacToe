@@ -57,6 +57,9 @@ function Game(props) {
       Confirm.prompt(
         "Wrong Password",
         "Input a password:",
+        "",
+        "proceed",
+        "leave room",
         password => joinRoom(gameId, password),
         leaveRoom
       )

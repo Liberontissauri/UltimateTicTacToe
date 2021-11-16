@@ -86,7 +86,7 @@ class Room {
     }
     addPlayer(socket, password) {
         if(this.connected_players.length >= this.player_limit) return socket.emit("error", "The room is full")
-        if(password != password) return socket.emit("wrong_password")
+        if(this.password != password) return socket.emit("wrong_password")
         let available_pieces = this.getAvailablePieces();
         let piece = available_pieces[Math.floor(Math.random() * (Math.abs(available_pieces.length)))]
         
